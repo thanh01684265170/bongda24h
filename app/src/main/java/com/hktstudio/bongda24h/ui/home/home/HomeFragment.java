@@ -15,9 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.hktstudio.bongda24h.R;
+import com.hktstudio.bongda24h.entity.CategoryEntity;
 import com.hktstudio.bongda24h.entity.NewsEntity;
 import com.hktstudio.bongda24h.interfaces.ItemOnClick;
 import com.hktstudio.bongda24h.ui.adapter.NewsAdapter;
+import com.hktstudio.bongda24h.ui.category.NewsCategoryActivity;
 import com.hktstudio.bongda24h.ui.detail.NewsDetailActivity;
 
 import java.util.ArrayList;
@@ -125,9 +127,16 @@ public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick{
 
     @Override
     public void onItemClick(int pos, Object obj) {
-        NewsEntity entity = (NewsEntity) obj;
-        Intent t = new Intent(getContext(), NewsDetailActivity.class);
-        t.putExtra("id",entity.getId());
-        getContext().startActivity(t);
+        if(obj instanceof  NewsEntity){
+            NewsEntity entity = (NewsEntity) obj;
+            Intent t = new Intent(getContext(), NewsDetailActivity.class);
+            t.putExtra("id",entity.getId());
+            getContext().startActivity(t);
+        }else if(obj instanceof CategoryEntity){
+            CategoryEntity entity = (CategoryEntity) obj;
+            Intent t = new Intent(getContext(), NewsCategoryActivity.class);
+            t.putExtra("data",entity.toString());
+            getContext().startActivity(t);
+        }
     }
 }

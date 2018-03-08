@@ -1,6 +1,7 @@
 package com.hktstudio.bongda24h.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.widget.TextView;
 
 import com.hktstudio.bongda24h.R;
 import com.hktstudio.bongda24h.entity.CategoryEntity;
+import com.hktstudio.bongda24h.interfaces.ItemOnClick;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Hai on 01/03/2018.
@@ -22,10 +25,13 @@ import butterknife.ButterKnife;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
     private List<CategoryEntity> list;
     private Context mContext;
-
-    public CategoryAdapter(List<CategoryEntity> list, Context mContext) {
+    int[] color;
+    ItemOnClick itemOnClick;
+    public CategoryAdapter(List<CategoryEntity> list, Context mContext,ItemOnClick itemOnClick) {
         this.list = list;
         this.mContext = mContext;
+        this.itemOnClick = itemOnClick;
+        color = mContext.getResources().getIntArray(R.array.arrayColor);;
     }
 
     @Override
@@ -35,9 +41,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     @Override
-    public void onBindViewHolder(CategoryHolder holder, int position) {
-        CategoryEntity category = list.get(position);
+    public void onBindViewHolder(CategoryHolder holder, final int position) {
+        final CategoryEntity category = list.get(position);
         holder.tvName.setText(category.getDisplayName());
+        holder.tvLabel.setText(category.getDisplayName().charAt(0)+"");
+        holder.img.setColorFilter(color[position%9]);
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemOnClick.onItemClick(position,category);
+            }
+        });
     }
 
     @Override
@@ -48,6 +62,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     class CategoryHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_category_name)
         TextView tvName;
+        @BindView(R.id.layout_root)
+         View view;
+        @BindView(R.id.img_category)
+        CircleImageView img;
+        @BindView(R.id.tv_category_label)
+        TextView tvLabel;
         public CategoryHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

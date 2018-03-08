@@ -1,5 +1,6 @@
 package com.hktstudio.bongda24h.ui.home.category;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,9 @@ import android.view.ViewGroup;
 
 import com.hktstudio.bongda24h.R;
 import com.hktstudio.bongda24h.entity.CategoryEntity;
+import com.hktstudio.bongda24h.interfaces.ItemOnClick;
 import com.hktstudio.bongda24h.ui.adapter.CategoryAdapter;
+import com.hktstudio.bongda24h.ui.category.NewsCategoryActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,15 @@ public class CategoryFragment extends Fragment implements CategoryMvpView{
     protected void initCategory(){
         rcvCategory.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         list = new ArrayList<>();
-        adapter = new CategoryAdapter(list,getContext());
+        adapter = new CategoryAdapter(list, getContext(), new ItemOnClick() {
+            @Override
+            public void onItemClick(int pos, Object obj) {
+                CategoryEntity entity = (CategoryEntity) obj;
+                Intent t = new Intent(getContext(), NewsCategoryActivity.class);
+                t.putExtra("data",entity.toString());
+                getContext().startActivity(t);
+            }
+        });
         rcvCategory.setAdapter(adapter);
         presenter.loadCategory();
 

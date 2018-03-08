@@ -27,8 +27,8 @@ public interface Service {
     Call<List<NewsEntity>> getHomeNews(@Query("page") int page);
     @GET("/news-api/category")
     Call<List<CategoryEntity>> getCategory();
-    @GET("/news-api/listnews?page={page}&size=10&catId={catId}")
-    Call<List<NewsEntity>> getCategoryNews(@Path("catId") int catId,@Path("page") int page);
+    @GET("/news-api/listnews?size=10")
+    Call<List<NewsEntity>> getCategoryNews(@Query("catId") int catId,@Query("page") int page);
     @GET("/news-api/post")
     Call<NewsDetailEntity> getNewsDetail(@Query("id") String id);
 }

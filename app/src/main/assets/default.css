@@ -1,0 +1,10 @@
+img{
+    display: inline;
+    height: auto;
+    max-width: 100%;
+}
+iframe {
+    display: block;
+    width:100%;
+    height:200;
+}

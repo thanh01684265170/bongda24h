@@ -1,6 +1,7 @@
 package com.hktstudio.bongda24h.ui.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +31,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     private Context mContext;
     private List<NewsEntity> list;
     private int type;
+    int[] color;
     private ItemOnClick itemOnClick;
     public NewsAdapter(Context mContext, List<NewsEntity> list,int type,ItemOnClick itemOnClick) {
         this.mContext = mContext;
         this.list = list;
         this.type = type;
         this.itemOnClick = itemOnClick;
+        color = mContext.getResources().getIntArray(R.array.arrayColor);;
     }
 
     @Override
@@ -63,11 +66,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         holder.tvCategory.setText(news.getCategory().getDisplayName());
         holder.tvDes.setText(news.getTitle());
         holder.tvTimeAgo.setText(UtilTime.timeAgo(news.getLastModifyDate()));
-        Glide.with(mContext).load(news.getPostImage()).into(holder.img);
-        holder.img.setOnClickListener(new View.OnClickListener() {
+        Glide.with(mContext).load(news.getPostImage()).placeholder(color[position%9]).into(holder.img);
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 itemOnClick.onItemClick(position,news);
+            }
+        });
+        holder.tvCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemOnClick.onItemClick(position,news.getCategory());
             }
         });
     }
@@ -86,6 +95,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         TextView tvDes;
         @BindView(R.id.tv_news_time_ago)
         TextView tvTimeAgo;
+        @BindView(R.id.layout_root)
+        View view;
         public NewsHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
