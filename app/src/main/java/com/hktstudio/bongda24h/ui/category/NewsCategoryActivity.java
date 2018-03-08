@@ -3,6 +3,7 @@ package com.hktstudio.bongda24h.ui.category;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,11 +30,13 @@ import butterknife.ButterKnife;
  * Created by Hai on 07/03/2018.
  */
 
-public class NewsCategoryActivity extends BaseActivity implements NewsCategoryMvpView{
+public class NewsCategoryActivity extends BaseActivity implements NewsCategoryMvpView,SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rcv_news_category)
     RecyclerView rcv;
+    @BindView(R.id.sw_layout)
+    SwipeRefreshLayout swRefresh;
     NewsAdapter adapter;
     NewsCategoryPresenter presenter;
     List<NewsEntity> list;
@@ -43,8 +46,9 @@ public class NewsCategoryActivity extends BaseActivity implements NewsCategoryMv
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setLayoutView(R.layout.activity_news_category);
+        setContentView(R.layout.activity_news_category);
         ButterKnife.bind(this);
+        swRefresh.setOnRefreshListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new NewsCategoryPresenter();
@@ -106,6 +110,7 @@ public class NewsCategoryActivity extends BaseActivity implements NewsCategoryMv
     @Override
     public void onHideLoading() {
         loading =false;
+        swRefresh.setRefreshing(false);
     }
 
     @Override
@@ -115,5 +120,10 @@ public class NewsCategoryActivity extends BaseActivity implements NewsCategoryMv
                 finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.getNews(category.getId(),1);
     }
 }

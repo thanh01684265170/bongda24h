@@ -28,6 +28,8 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailMvpView> {
             @Override
             protected void onPostExecute(NewsDetailEntity newsDetailEntity) {
                 super.onPostExecute(newsDetailEntity);
+                if(getMvpView()==null)
+                    return;
                 if(newsDetailEntity!=null){
                     getMvpView().onGetDetailSuccess(newsDetailEntity);
                 }

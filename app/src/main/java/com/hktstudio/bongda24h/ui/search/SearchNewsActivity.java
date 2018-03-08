@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hktstudio.bongda24h.R;
 import com.hktstudio.bongda24h.entity.CategoryEntity;
 import com.hktstudio.bongda24h.entity.NewsEntity;
@@ -21,6 +23,7 @@ import com.hktstudio.bongda24h.ui.adapter.NewsAdapter;
 import com.hktstudio.bongda24h.ui.base.BaseActivity;
 import com.hktstudio.bongda24h.ui.category.NewsCategoryActivity;
 import com.hktstudio.bongda24h.ui.detail.NewsDetailActivity;
+import com.hktstudio.bongda24h.util.UtilSharedPreference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
@@ -49,31 +52,33 @@ public class SearchNewsActivity extends BaseActivity implements SearchNewsMvpVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setLayoutView(R.layout.activity_search);
+        setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         presenter = new SearchNewsPresenter();
         presenter.attachView(this);
+        checkCategory();
         initNews();
+
     }
     protected void initNews(){
         list = new ArrayList<>();
         adapter = new NewsAdapter(this, list, NewsAdapter.TYPE_NORMAL_NEWS, new ItemOnClick() {
             @Override
             public void onItemClick(int pos, Object obj) {
-                if(obj instanceof  NewsEntity){
-                    NewsEntity entity = (NewsEntity) obj;
-                    Intent t = new Intent(getBaseContext(), NewsDetailActivity.class);
-                    t.putExtra("id",entity.getId());
-                    startActivity(t);
-                }else if(obj instanceof CategoryEntity){
-                    CategoryEntity entity = (CategoryEntity) obj;
-                    Intent t = new Intent(getBaseContext(), NewsCategoryActivity.class);
-                    t.putExtra("data",entity.toString());
-                    startActivity(t);
-                }
+            if(obj instanceof  NewsEntity){
+                NewsEntity entity = (NewsEntity) obj;
+                Intent t = new Intent(getBaseContext(), NewsDetailActivity.class);
+                t.putExtra("id",entity.getId());
+                startActivity(t);
+            }else if(obj instanceof CategoryEntity){
+                CategoryEntity entity = (CategoryEntity) obj;
+                Intent t = new Intent(getBaseContext(), NewsCategoryActivity.class);
+                t.putExtra("data",entity.toString());
+                startActivity(t);
+            }
             }
         });
         rcv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -81,16 +86,24 @@ public class SearchNewsActivity extends BaseActivity implements SearchNewsMvpVie
         rcv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rcv.getLayoutManager();
-                int totalItemCount = linearLayoutManager.getItemCount();
-                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (!loading && totalItemCount <= (lastVisibleItem + 1)) {
-                    presenter.search(key,list.size()/itemPerPage+1);
-                    loading = true;
-                }
+            super.onScrolled(recyclerView, dx, dy);
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rcv.getLayoutManager();
+            int totalItemCount = linearLayoutManager.getItemCount();
+            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+            if (!loading && totalItemCount <= (lastVisibleItem + 1)) {
+                presenter.search(key,list.size()/itemPerPage+1);
+                loading = true;
+            }
             }
         });
+    }
+    protected void checkCategory(){
+        String rs = UtilSharedPreference.getString(this,"category","");
+        if(!rs.equals("")){
+            Gson gson = new Gson();
+            List<CategoryEntity> categoryEntities = gson.fromJson(rs, new TypeToken<List<CategoryEntity>>(){}.getType());
+            presenter.setCategory(categoryEntities);
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

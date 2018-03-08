@@ -29,6 +29,8 @@ public class HomePresenter extends BasePresenter<HomeMvpView> {
             @Override
             protected void onPostExecute(List<NewsEntity> newsEntities) {
                 super.onPostExecute(newsEntities);
+                if(getMvpView()==null)
+                    return;
                 if(newsEntities!=null){
                     getMvpView().onGetHotNewsSuccess(newsEntities);
                 }

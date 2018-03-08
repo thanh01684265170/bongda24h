@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,9 +33,11 @@ import butterknife.ButterKnife;
  * Created by Hai on 28/02/2018.
  */
 
-public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick{
+public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick,SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.rcv_hot_news)
     RecyclerView rcvHotNews;
+    @BindView(R.id.sw_layout)
+    SwipeRefreshLayout swRefresh;
     @BindView(R.id.rcv_home_news)
     RecyclerView rcvHomeNews;
     @BindView(R.id.scroll_home)
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         ButterKnife.bind(this,rootView);
+        swRefresh.setOnRefreshListener(this);
         initHotNews();
         initHomeNews();
         return rootView;
@@ -123,6 +127,7 @@ public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick{
     @Override
     public void onHideLoading() {
         loading = false;
+        swRefresh.setRefreshing(false);
     }
 
     @Override
@@ -138,5 +143,12 @@ public class HomeFragment extends Fragment implements HomeMvpView,ItemOnClick{
             t.putExtra("data",entity.toString());
             getContext().startActivity(t);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.getHotNews();
+        presenter.getHomeNews(1);
+        loading = true;
     }
 }

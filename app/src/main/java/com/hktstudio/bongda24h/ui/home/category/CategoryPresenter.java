@@ -29,8 +29,12 @@ public class CategoryPresenter extends BasePresenter<CategoryMvpView> {
             @Override
             protected void onPostExecute(List<CategoryEntity> categoryEntities) {
                 super.onPostExecute(categoryEntities);
+                if(getMvpView()==null)
+                    return;
                 if(categoryEntities!=null){
                     getMvpView().onLoadSuccess(categoryEntities);
+                }else{
+                    getMvpView().onLoadFail();
                 }
             }
         };

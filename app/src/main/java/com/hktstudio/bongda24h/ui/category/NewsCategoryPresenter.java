@@ -29,6 +29,8 @@ public class NewsCategoryPresenter extends BasePresenter<NewsCategoryMvpView> {
             @Override
             protected void onPostExecute(List<NewsEntity> newsEntities) {
                 super.onPostExecute(newsEntities);
+                if(getMvpView()==null)
+                    return;
                 if(newsEntities != null){
                     getMvpView().onGeDataSuccess(newsEntities,page==1);
                 }

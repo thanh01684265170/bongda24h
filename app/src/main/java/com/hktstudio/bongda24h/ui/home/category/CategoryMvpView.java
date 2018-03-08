@@ -11,4 +11,5 @@ import java.util.List;
 
 public interface CategoryMvpView extends MvpView {
     void onLoadSuccess(List<CategoryEntity> list);
+    void onLoadFail();
 }

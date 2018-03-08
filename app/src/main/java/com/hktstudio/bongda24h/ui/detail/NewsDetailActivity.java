@@ -45,7 +45,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailMvpVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setLayoutView(R.layout.activity_detail_news);
+        setContentView(R.layout.activity_detail_news);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,7 +58,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailMvpVie
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(false);
         webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient(){
+            public void onPageFinished(WebView view, String url){
+                intVideoSize();
+            }
+        });
         webView.getSettings().setBuiltInZoomControls(false);
         webView.getSettings().setDomStorageEnabled(true);
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
@@ -89,7 +93,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailMvpVie
         data.append("</body></HTML>");
         data.append("<script type=\"text/javascript\" src=\"action.js\"></script>");
         webView.loadDataWithBaseURL("file:///android_asset/", data.toString(), "text/html", "utf-8", null);
-        intVideoSize();
+
     }
 
     @Override
@@ -107,14 +111,10 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailMvpVie
         float density = metrix.density;
 
         String func = "javascript:changeIframeSize(" +
+                (int)(height / density - 75 ) +
+                ", " +
+                (int)(width / density) +
                 ")";
-//                (int)(height / density - 75 ) +
-//                ", " +
-//                (int)(width / density) +
-//                ")";
-        Timber.e(func);
-//            webView.loadUrl(func);
-
-            webView.loadUrl("javascript:testEcho()");
+            webView.loadUrl(func);
     }
 }
