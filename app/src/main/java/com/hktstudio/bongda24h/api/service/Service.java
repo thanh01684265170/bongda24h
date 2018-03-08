@@ -29,6 +29,8 @@ public interface Service {
     Call<List<CategoryEntity>> getCategory();
     @GET("/news-api/listnews?size=10")
     Call<List<NewsEntity>> getCategoryNews(@Query("catId") int catId,@Query("page") int page);
+    @GET("/news-api/search?size=10")
+    Call<List<NewsEntity>> searchNews(@Query("title") String title,@Query("page") int page);
     @GET("/news-api/post")
     Call<NewsDetailEntity> getNewsDetail(@Query("id") String id);
 }

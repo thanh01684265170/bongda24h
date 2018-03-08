@@ -33,6 +33,10 @@ public class NewsResponse extends Repository {
         Call<List<NewsEntity>> call = this.service.getCategoryNews(id,page);
         return call.execute().body();
     }
+    public List<NewsEntity> searchNews(String key,int page) throws IOException {
+        Call<List<NewsEntity>> call = this.service.searchNews(key,page);
+        return call.execute().body();
+    }
     public List<CategoryEntity> getCategory() throws IOException {
         Call<List<CategoryEntity>> call = this.service.getCategory();
         return call.execute().body();

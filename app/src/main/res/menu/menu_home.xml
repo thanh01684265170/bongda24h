@@ -6,9 +6,5 @@
         android:icon="@drawable/ic_search"
         apps:showAsAction="always"
         ></item>
-    <item android:id="@+id/action_searc"
-        android:title="Tìm kiếm"
-        android:icon="@drawable/ic_search"
-        apps:showAsAction="never"
-        ></item>
+
 </menu>
