@@ -1,16 +1,15 @@
-package com.hktstudio.bongda24h.ui.adapter;
+package com.nhom11.bongda24h.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.hktstudio.bongda24h.R;
-import com.hktstudio.bongda24h.entity.CategoryEntity;
-import com.hktstudio.bongda24h.interfaces.ItemOnClick;
+import com.nhom11.bongda24h.R;
+import com.nhom11.bongda24h.entity.CategoryEntity;
+import com.nhom11.bongda24h.interfaces.ItemOnClick;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Hai on 01/03/2018.
+ * Created by Dang on 22/05/2018.
  */
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
@@ -33,7 +32,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.itemOnClick = itemOnClick;
         color = mContext.getResources().getIntArray(R.array.arrayColor);;
     }
-
+//thay doi
     @Override
     public CategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_category,parent,false);
